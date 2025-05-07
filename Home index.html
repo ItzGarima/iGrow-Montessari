@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iGrow Montessori</title>
+  <link rel="stylesheet" href="Home2.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    /* Additional inline styles to fix immediate issues */
+    .hero-banner {
+      position: relative;
+      height: 60vh;
+      min-height: 500px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      color: white;
+      overflow: hidden;
+      background-image: url('Home banner.png'); /* Add the banner image as background */
+      background-size: cover;
+      background-position: center;
+    }
+    
+    .gallery-grid {
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: nowrap;
+      gap: 15px;
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+    
+    .gallery-item {
+      flex: 0 0 calc(33.33% - 15px);
+      min-width: 280px;
+      height: 300px;
+      position: relative;
+    }
+    
+    .testimonial-slider {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+    }
+    
+    .testimonial-slide {
+      display: none;
+      padding: 2rem;
+      background-color: #8ed4f0;
+      border-radius: 15px;
+      margin: 0 auto;
+      width: 90%;
+      max-width: 800px;
+      opacity: 0;
+      transform: translateX(30px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    
+    .testimonial-slide.active {
+      display: block;
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .testimonial-dots {
+      display: flex;
+      justify-content: center;
+      margin-top: 1rem;
+    }
+    
+    .dot {
+      width: 12px;
+      height: 12px;
+      background-color: #ccc;
+      border-radius: 50%;
+      margin: 0 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .dot.active {
+      background-color: #01a0e2;
+      transform: scale(1.2);
+    }
+    
+    /* Improved symmetry for USP grid */
+    .usp-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .usp-card {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: #fffbea;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      text-align: center;
+      border-bottom: 3px solid #ffee02;
+    }
+    
+    /* Ensure the last two cards are centered if we have a total of 8 */
+    .usp-grid .last-row {
+      grid-column: span 3;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+    }
+    
+    .usp-grid .last-row .usp-card {
+      width: calc(33% - 1rem);
+      max-width: 350px;
+    }
+    
+    @media (max-width: 992px) {
+      .usp-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .usp-grid .last-row {
+        grid-column: span 2;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .usp-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .usp-grid .last-row {
+        grid-column: span 1;
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .usp-grid .last-row .usp-card {
+        width: 100%;
+      }
+    }
+
+    /* New styles for added sections */
+    .program-section {
+      padding: 4rem 2rem;
+      background-color: #f9f9f9;
+    }
+
+    .program-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .program-card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .program-header {
+      background-color: #01a0e2;
+      color: white;
+      padding: 1.5rem 2rem;
+    }
+
+    .program-title {
+      font-size: 1.8rem;
+      margin: 0;
+    }
+
+    .program-age {
+      font-size: 1.1rem;
+      font-weight: normal;
+      margin-top: 0.5rem;
+    }
+
+    .program-content {
+      padding: 2rem;
+    }
+
+    .program-description {
+      margin-bottom: 1.5rem;
+      line-height: 1.6;
+    }
+
+    .program-features {
+      margin-top: 1.5rem;
+    }
+
+    .program-features h4 {
+      font-size: 1.2rem;
+      margin-bottom: 1rem;
+      color: #01a0e2;
+    }
+
+    .feature-list {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 1rem;
+    }
+
+    .feature-item i {
+      color: #ffee02;
+      margin-right: 1rem;
+      margin-top: 0.3rem;
+    }
+
+    .feature-text {
+      flex: 1;
+    }
+
+    .program-quote {
+      font-style: italic;
+      text-align: center;
+      color: #555;
+      margin-top: 2rem;
+      padding: 1rem;
+      border-top: 1px solid #eee;
+    }
+
+    /* FAQ Section Styles */
+    .faq-section {
+      padding: 4rem 2rem;
+      background-color: #f5fbff;
+    }
+
+    .faq-container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .faq-item {
+      margin-bottom: 1.5rem;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+    }
+
+    .faq-question {
+      padding: 1.2rem 1.5rem;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #01a0e2;
+      background-color: #f9f9f9;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .faq-question:hover {
+      background-color: #edf7fc;
+    }
+
+    .faq-question::after {
+      content: '\f067';
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item.active .faq-question::after {
+      content: '\f068';
+    }
+
+    .faq-answer {
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .faq-item.active .faq-answer {
+      padding: 1.5rem;
+      max-height: 1000px;
+    }
+
+    .faq-answer p {
+      margin: 0;
+      line-height: 1.6;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="home-page">
+    <!-- Navigation Bar -->
+<header>
+  <div class="logo-container">
+    <img src="iGrow.jpg" alt="iGrow Montessori Logo" class="logo">
+  </div>
+  <nav>
+    <div class="hamburger-menu">
+      <div class="bar"></div>
+      <div class="bar"></div>
+      <div class="bar"></div>
+    </div>
+    <ul class="nav-links">
+      <li>
+        <a href="#home" class="nav-link active">Home</a>
+      </li>
+      <li>
+        <a href="#programs" class="nav-link">Programs</a>
+      </li>
+      <li>
+        <a href="#facilities" class="nav-link">Facilities</a>
+      </li>
+      <li>
+        <a href="#principals-desk" class="nav-link">Principal's Desk</a>
+      </li>
+      <li>
+        <a href="#parents-reviews" class="nav-link">Parents Reviews</a>
+      </li>
+      <li>
+        <a href="#faq" class="nav-link">FAQs</a>
+      </li>
+      <li>
+        <a href="Contacts.html" class="nav-link">Contact</a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+
+    <!-- Hero Banner with integrated image background -->
+    <section id="home" class="hero-banner">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1 class="hero-headline">Nurturing Young Minds with Love and Learning</h1>
+        <p class="hero-subheadline">Pre-Nursery to UKG | Daycare | Safe • Caring • Joyful</p>
+        <a href="#introduction" class="cta-button">Explore Our Facilities</a>
+      </div>
+    </section>
+<br>
+    <!-- Introduction Section -->
+    <section id="introduction" class="intro-section">
+      <div class="intro-image">
+        <img src="Classroom.jpg" alt="Happy classroom moment">
+      </div>
+      <div class="intro-text">
+        <p>At iGrow Montessori, we believe that the early years are the foundation of a child's lifelong journey. Our preschool and daycare offer a safe, loving, and stimulating environment where curiosity is nurtured, and learning begins through play, exploration, and gentle guidance. From Pre-Nursery to UKG, every child is encouraged to grow at their own pace — with care, creativity, and confidence.</p>
+      </div>
+    </section>
+
+    <!-- Program Sections: Play School and Daycare -->
+    <section id="programs" class="program-section">
+      <h2 class="section-heading">Our Programs</h2>
+      <div class="program-container">
+        <!-- Play School Program -->
+        <div class="program-card">
+          <div class="program-header">
+            <h3 class="program-title">Play School</h3>
+            <p class="program-age">Age Group: 2.5 to 5 years</p>
+          </div>
+          <div class="program-content">
+            <p class="program-description">Our Play School program is thoughtfully designed to provide a warm, joyful, and engaging learning space where little ones take their first steps into structured education. The curriculum blends storytelling, music, dance, games, and crafts to spark curiosity and encourage self-expression.</p>
+            
+            <div class="program-features">
+              <h4>Key Features:</h4>
+              <ul class="feature-list">
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Theme-Based Learning:</strong> Each month focuses on a new theme like animals, seasons, or festivals to make learning exciting and relatable.
+                  </div>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Activity Corners:</strong> Includes reading nooks, art zones, and sensory play areas for hands-on exploration.
+                  </div>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Emotional Development:</strong> Teachers focus on kindness, sharing, and social behavior to help children build confidence and empathy.
+                  </div>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Language and Motor Skills:</strong> Songs, rhymes, and drawing activities nurture communication and fine motor abilities.
+                  </div>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Celebrations & Events:</strong> Children participate in national festivals, birthday celebrations, and cultural days for joyful memories and learning.
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+            <div class="program-quote">
+              "Our goal is to ensure each child leaves school with a smile, a story, and a new skill every day."
+            </div>
+          </div>
+        </div>
+        
+        <!-- Daycare Program -->
+        <div class="program-card">
+          <div class="program-header">
+            <h3 class="program-title">Daycare</h3>
+            <p class="program-age">Age Group: 2 to 6 years</p>
+          </div>
+          <div class="program-content">
+            <p class="program-description">Our Daycare facility is a second home for children—safe, affectionate, and enriching. Whether parents need short-term care or full-day support, we offer flexible and structured routines that suit every family's needs.</p>
+            
+            <div class="program-features">
+              <h4>Key Features:</h4>
+              <ul class="feature-list">
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Age-Wise Groups:</strong> Infants, toddlers, and school-goers are cared for in separate age-appropriate zones.
+                  </div>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Daily Routine:</strong> A balance of rest, meals, play, and learning. Includes storytelling sessions, indoor games, and quiet time.
+                  </div>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Nutritious Meals:</strong> Healthy, home-style food prepared fresh each day. We also accommodate special dietary requirements if needed.
+                  </div>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Health & Hygiene:</strong> Clean sleeping mats, regular sanitization, and supervised toileting practices ensure cleanliness.
+                  </div>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Safety & Supervision:</strong> CCTV monitoring, trained staff, emergency protocols, and regular check-ins with parents.
+                  </div>
+                </li>
+                <li class="feature-item">
+                  <i class="fas fa-star"></i>
+                  <div class="feature-text">
+                    <strong>Homework Support (for older kids):</strong> Dedicated time and assistance with school assignments after school hours.
+                  </div>
+                </li>
+              </ul>
+            </div>
+            
+            <div class="program-quote">
+              "We know how precious your child is—and we promise to care for them just like you would."
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- USP Section - Redesigned for symmetry -->
+    <section id="facilities" class="usp-section">
+      <h2 class="section-heading">What Makes Us Special</h2>
+      <div class="usp-grid">
+        <div class="usp-card">
+          <div class="usp-icon">
+            <i class="fas fa-chalkboard-teacher"></i>
+          </div>
+          <h3 class="usp-title">3 Teachers in Every Class</h3>
+          <p class="usp-text">Each class is guided by a Mother Teacher, a Co-Teacher, and a Helper, ensuring personalized care, attention, and emotional bonding for every child.</p>
+        </div>
+        
+        <div class="usp-card">
+          <div class="usp-icon">
+            <i class="fas fa-music"></i>
+          </div>
+          <h3 class="usp-title">Balanced Learning with Fun Breaks</h3>
+          <p class="usp-text">Joyful breaks like rhyme sessions, story time, and games make learning light and fun.</p>
+        </div>
+        
+        <div class="usp-card">
+          <div class="usp-icon">
+            <i class="fas fa-globe-americas"></i>
+          </div>
+          <h3 class="usp-title">Monthly Themes for Real-World Awareness</h3>
+          <p class="usp-text">Children explore new monthly themes through crafts, stories, and celebrations.</p>
+        </div>
+        
+        <div class="usp-card">
+          <div class="usp-icon">
+            <i class="fas fa-hands-helping"></i>
+          </div>
+          <h3 class="usp-title">Inclusive & Supportive Environment</h3>
+          <p class="usp-text">We welcome and support children with autism and special needs.</p>
+        </div>
+        
+        <div class="usp-card">
+          <div class="usp-icon">
+            <i class="fas fa-paint-brush"></i>
+          </div>
+          <h3 class="usp-title">Daily activity-based learning</h3>
+          <p class="usp-text">We encourage creative expression and learning through various activities every day.</p>
+        </div>
+        
+        <div class="usp-card">
+          <div class="usp-icon">
+            <i class="fas fa-broom"></i>
+          </div>
+          <h3 class="usp-title">Spotless, child-safe campus</h3>
+          <p class="usp-text">We maintain the highest standards of cleanliness and safety for your children.</p>
+        </div>
+        
+        <!-- Last two cards placed in a separate row that spans the grid -->
+        <div class="last-row">
+          <div class="usp-card">
+            <div class="usp-icon">
+              <i class="fas fa-camera"></i>
+            </div>
+            <h3 class="usp-title">Regular updates for parents</h3>
+            <p class="usp-text">We send photo and video updates so you never miss your child's special moments.</p>
+          </div>
+          
+          <div class="usp-card">
+            <div class="usp-icon">
+              <i class="fas fa-book-reader"></i>
+            </div>
+            <h3 class="usp-title">Learning through storytelling</h3>
+            <p class="usp-text">We use stories and role play to make learning engaging and memorable.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+     <!-- Principal & Management Messages -->
+<section class="messages-section" id="principals-desk">
+  <!-- Principal's Message with Image -->
+  <div class="principal-message">
+    <div class="principal-image">
+      <img src="preeti ma'am.png" alt="Preeti Khare">
+    </div>
+    <div class="principal-text">
+      <div class="message-header">
+        <h3 class="message-title">Message from the Principal</h3>
+        <p class="message-role">Preeti Khare</p>
+      </div>
+      <div class="message-content">
+        <p>At iGrow Montessori, we believe that every child carries a spark within — a spark of wonder, imagination, and potential. Our role as educators is to gently guide and nurture that light, helping each child grow with confidence, kindness, and curiosity.</p>
+        <p>We aim to create not just a place of learning, but a second home — where children feel safe, valued, and excited to explore the world around them. It brings me great joy to see little footsteps becoming bold strides each day, and I feel privileged to be part of their beautiful beginning.</p>
+      </div>
+      <div class="message-signature">
+        <p>Warm regards,<br>Preeti Khare<br>Principal</p>
+      </div>
+    </div>
+  </div>
+</section>
+        
+        <!-- Management Message -->
+        <div class="management-message">
+          <div class="message-header">
+            <h3 class="message-title">Message from Management</h3>
+            <p class="message-role">Monica Ratni Sheyshma</p>
+          </div>
+          <div class="message-content">
+            <p>As a parent myself, I understand the deep trust it takes to place your child in someone else's care. At iGrow Montessori, that trust is the foundation of everything we do.</p> 
+            <p>From our thoughtfully designed classrooms to our compassionate staff, every decision is made with your child's wellbeing in mind.
+              We are committed to building not just a school, but a safe community — one that values emotional growth as much as academic learning.</p>
+            <p>Thank you for considering us as partners in your child's early journey. We are excited to welcome you into our family.</p>
+          </div>
+          <div class="message-signature">
+            <p>Warm wishes,<br>Monica Ratni Sheyshma<br>Management Head</p>
+          </div>
+        </div>
+      </section>
+  
+   <!-- Testimonials Section -->
+<section class="testimonials-section" id="parents-reviews">
+  <h2 class="section-heading">PARENTS REVIEWS</h2>
+  <div class="testimonials-container">
+    <div class="testimonial-slider">
+      <!-- Testimonials go here -->
+          <div class="testimonial-slide active">
+            <p class="testimonial-text">One of the best school for toddlers. Teachers r very friendly, enthusiastic and passionate. I would recommend it to the parents who want to see their children learn, and perform extraordinarily. Grow with igrow Montessori.</p>
+            <p class="testimonial-author">- Parvati Devi</p>
+            <div class="testimonial-dots">
+              <span class="dot active" onclick="currentSlide(1)"></span>
+              <span class="dot" onclick="currentSlide(2)"></span>
+              <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+          </div>
+          
+          <div class="testimonial-slide">
+            <p class="testimonial-text">I attend this school nearly a year ago and have only great things to sayabout my experience. The teachers are amazing, the curriculum is second to none and each child is treated with care
+              Monika Sheshma is a great tutor and I would recommend her to not only students who are taking class but also for people like me who are learning on their own.</p>
+            <p class="testimonial-author">- Sarita Chauhan</p>
+            <div class="testimonial-dots">
+              <span class="dot" onclick="currentSlide(1)"></span>
+              <span class="dot active" onclick="currentSlide(2)"></span>
+              <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+          </div>
+          
+          <div class="testimonial-slide">
+            <p class="testimonial-text">Nice school and nice location for kids. Best thing nearby many society and easy to parents to pick n drop for their kids. Play ground and play zone is very good. Regular children activity is held and helps to grow their knowledge and learn lots of many things.</p>
+            <p class="testimonial-author">- Anil Saini</p>
+            <div class="testimonial-dots">
+              <span class="dot" onclick="currentSlide(1)"></span>
+              <span class="dot" onclick="currentSlide(2)"></span>
+              <span class="dot active" onclick="currentSlide(3)"></span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="slider-arrow slider-prev" id="prev-testimonial" onclick="plusSlides(-1)">
+          <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="slider-arrow slider-next" id="next-testimonial" onclick="plusSlides(1)">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery Section -->
+    <section class="gallery-section">
+      <h2 class="section-heading">GALLERY</h2>
+      <div class="gallery-container">
+        <div class="gallery-grid">
+          <div class="gallery-item">
+            <img src="Gallery 1.jpg" alt="Activity time" class="gallery-image">
+          </div>
+          
+          <div class="gallery-item">
+            <img src="Galllery 2.jpg" alt="Activity time" class="gallery-image">
+          </div>
+          
+          <div class="gallery-item">
+            <img src="Gallery 3.jpg" alt="Activity time" class="gallery-image">
+          </div>
+        </div>
+        
+        <div class="slider-arrow slider-prev" id="prev-gallery" onclick="prevGallery()">
+          <i class="fas fa-chevron-left"></i>
+        </div>
+        <div class="slider-arrow slider-next" id="next-gallery" onclick="nextGallery()">
+          <i class="fas fa-chevron-right"></i>
+        </div>
+      </div>
+    </section>
+
+     <!-- FAQ Section - Added as requested -->
+     <section id="faq" class="faq-section">
+      <h2 class="section-heading">Frequently Asked Questions</h2>
+      <div class="faq-container">
+        <div class="faq-item">
+          <div class="faq-question">What are the operating hours of the play school and daycare?</div>
+          <div class="faq-answer">
+            <p>Our play school runs from 9:00 AM to 1:30 PM, while daycare services are available from 8:30 AM to 6:30 PM, Monday to Friday.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Is the facility air-conditioned and child-safe?</div>
+          <div class="faq-answer">
+            <p>Yes, classrooms and play areas are fully air-conditioned, equipped with cushioned flooring, rounded furniture, and child-safe utilities.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Do you provide transportation services?</div>
+          <div class="faq-answer">
+            <p>Yes, we offer safe and supervised pick-up and drop-off services within selected localities. Each vehicle has a lady attendant onboard.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">How are meals and snacks managed?</div>
+          <div class="faq-answer">
+            <p>Nutritious vegetarian meals and snacks are prepared in-house under hygienic conditions. Weekly menus are shared with parents in advance.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Are there CCTV cameras installed?</div>
+          <div class="faq-answer">
+            <p>Yes, the entire premises is under 24/7 CCTV surveillance, and live access may be provided to parents during daycare hours.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">What qualifications do your teachers and staff have?</div>
+          <div class="faq-answer">
+            <p>All staff members are trained in early childhood education and undergo regular first-aid and safety workshops.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">How do you handle emergencies or illnesses?</div>
+          <div class="faq-answer">
+            <p>We have a tie-up with a nearby pediatric clinic and always have a first-aid kit and emergency contacts on file. Parents are informed immediately.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Can parents visit during school hours?</div>
+          <div class="faq-answer">
+            <p>Parents are welcome for scheduled visits and events. Unscheduled visits are regulated to maintain a secure and distraction-free environment.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Do you organize field trips or outdoor activities?</div>
+          <div class="faq-answer">
+            <p>Yes, we conduct supervised picnics, nature walks, and local visits to parks or cultural sites, depending on the age group.</p>
+          </div>
+        </div>
+        
+        <div class="faq-item">
+          <div class="faq-question">Is there a settling-in period for new children?</div>
+          <div class="faq-answer">
+            <p>Absolutely. We offer a flexible settling-in period where parents can stay for short durations to help the child adapt comfortably.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+      <div class="cta-content">
+        <h2 class="cta-heading">Join Our Family</h2>
+        <p class="cta-text">Visit us or inquire now to learn how your child can grow with love and learning at iGrow Montessori.</p>
+        <div class="cta-buttons">
+          <a href="Contacts.html" class="cta-btn cta-primary">Contact Us</a>
+          <a href="Contacts.html#enquiry" class="cta-btn cta-secondary">Admission Enquiry</a>
+        </div>
+      </div>
+    </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <div class="footer-block">
+        <h3 class="footer-heading">Address</h3>
+        <p class="footer-address">33B, Homes Avenue, Sector 83 Vatika India Next, Gurgaon</p>
+      </div>
+      
+      <div class="footer-block">
+        <h3 class="footer-heading">Contact</h3>
+        <p class="footer-contact">Preeti Khare: 822-100-2103</p>
+        <p class="footer-contact">Monica Ratni Sheshma: 98-1010-3770</p>
+        <p class="footer-contact">Email: igrowgurgaon@gmail.com</p>
+      </div>
+      
+      <div class="footer-block">
+        <h3 class="footer-heading">Connect With Us</h3>
+        <div class="footer-social">
+          <a href="https://instagram.com/igrowgurgaon" target="_blank" rel="noopener noreferrer" class="social-icon-footer">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://facebook.com/iGrowGurgaon" target="_blank" rel="noopener noreferrer" class="social-icon-footer">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://wa.me/9810103770" target="_blank" rel="noopener noreferrer" class="social-icon-footer">
+            <i class="fab fa-whatsapp"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <div class="copyright">
+      <p>&copy; <span id="current-year"></span> iGrow Montessori. All rights reserved.</p>
+    </div>
+  </footer>
+</div>
+
+<script src="Home 3.js"></script>
+<script>
+  // Additional JavaScript for testimonial and gallery sliders
+  let slideIndex = 1;
+  showSlides(slideIndex);
+  
+  function plusSlides(n) {
+    showSlides(slideIndex += n);
+  }
+  
+  function currentSlide(n) {
+    showSlides(slideIndex = n);
+  }
+  
+  function showSlides(n) {
+    let i;
+    let slides = document.getElementsByClassName("testimonial-slide");
+    let dots = document.querySelectorAll(".testimonial-dots .dot");
+    
+    if (n > slides.length) {slideIndex = 1}
+    if (n < 1) {slideIndex = slides.length}
+    
+    for (i = 0; i < slides.length; i++) {
+      slides[i].classList.remove("active");
+    }
+    
+    for (i = 0; i < dots.length; i++) {
+      dots[i].classList.remove("active");
+    }
+    
+    slides[slideIndex-1].classList.add("active");
+    
+    // Find all dot groups and update active state
+    const dotGroups = document.querySelectorAll(".testimonial-dots");
+    dotGroups.forEach(group => {
+      const dotElements = group.querySelectorAll(".dot");
+      if (dotElements.length > 0 && slideIndex <= dotElements.length) {
+        dotElements[slideIndex-1].classList.add("active");
+      }
+    });
+  }
+  
+  // Auto slide testimonials
+  setInterval(() => {
+    plusSlides(1);
+  }, 5000);
+  
+  // Simple gallery navigation
+  function prevGallery() {
+    const gallery = document.querySelector('.gallery-grid');
+    gallery.scrollBy({left: -300, behavior: 'smooth'});
+  }
+  
+  function nextGallery() {
+    const gallery = document.querySelector('.gallery-grid');
+    gallery.scrollBy({left: 300, behavior: 'smooth'});
+  }
+  
+  // Set current year
+  document.getElementById('current-year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
